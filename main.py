@@ -1,5 +1,5 @@
 from Bot import Bot
-TOKEN="OTg5OTMwNjYwNzc0OTUyOTkx.Gy1Dy0.HXhyeTReRy0EORKcp_nJw9GlfNB9TDvwjzpFHw"
+from config import TOKEN
 
 bot = Bot(TOKEN)
 
