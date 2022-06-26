@@ -1,9 +1,8 @@
 import discord
 from discord.ext import commands
 from utils.user import UserAuth, getUser
-from guild import RoleManager
+from guild import RoleManager, UserManager
 from exceptions import FailedToLoginException
-from models import User
 
 
 class Auth(commands.Cog):
@@ -24,8 +23,8 @@ class Auth(commands.Cog):
         if not role:
             role = await RoleManager.createRole(ctx.guild, user.group)
 
-        await ctx.author.add_roles(role, reason="Added by bot, adding new user role")
-        await ctx.author.edit(nick=user.name, reason="Changed by bot, authenticating new user")
+        await UserManager.addRoles(ctx.author, role, reason="Added by bot, adding new user role")
+        await UserManager.changeNickname(ctx.author, nick=user.name, reason="Changed by bot, authenticating new user")
 
 
 def setup(bot):

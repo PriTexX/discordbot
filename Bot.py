@@ -22,3 +22,4 @@ class Bot(commands.Bot):
         for filename in os.listdir("./cogs"):
             if filename.endswith(".py"):
                 self.load_extension(f"cogs.{filename[:-3]}")
+        super().run(self.token)

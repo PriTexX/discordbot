@@ -1,5 +1,4 @@
 import requests
-from models import User
 from exceptions import FailedToLoginException
 
 
