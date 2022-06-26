@@ -1,9 +1,12 @@
 import discord
 from discord.ext import commands
+import os
 
 
 class Bot(commands.Bot):
-    def __init__(self):
+    def __init__(self, token):
+        self.token = token
+
         intents = discord.Intents.default()
         intents.emojis = False
         intents.integrations = False
@@ -14,3 +17,8 @@ class Bot(commands.Bot):
         intents.members = True
 
         super().__init__(command_prefix='!', intents=intents)
+
+    def run(self):
+        for filename in os.listdir("./cogs"):
+            if filename.endswith(".py"):
+                self.load_extension(f"cogs.{filename[:-3]}")
