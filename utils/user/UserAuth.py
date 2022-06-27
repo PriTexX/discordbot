@@ -9,7 +9,7 @@ class UserAuth:
         resp = requests.post("https://e.mospolytech.ru/old/lk_api.php", data={
             'ulogin': login,
             'upassword': password,
-        }, verify=False)
+        })
 
         if resp.status_code == 400:
             raise FailedToLoginException("Неверно указан логин или пароль")
@@ -18,9 +18,6 @@ class UserAuth:
 
     @staticmethod
     def getUserInfo(token):
-        userInfo = requests.get(
-            f"https://e.mospolytech.ru/old/lk_api.php/?getUser&token={token}",
-            verify=False
-        ).json()
+        userInfo = requests.get(f"https://e.mospolytech.ru/old/lk_api.php/?getUser&token={token}").json()
 
         return userInfo['user']

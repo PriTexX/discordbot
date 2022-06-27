@@ -6,8 +6,8 @@ class RoleManager:
 
     @staticmethod
     async def createRole(guild: discord.Guild, name) -> discord.Role:
-        colour = discord.Color.from_rgb(randint(0,255), randint(0,255), randint(0,255))
-        role = await guild.create_role(name=name, colour=colour, hoist=True, mentionable=True, reason="Created by bot")
+        color = discord.Color.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255))
+        role = await guild.create_role(name=name, color=color, hoist=True, mentionable=True, reason="Created by bot")
         return role
 
     @staticmethod
