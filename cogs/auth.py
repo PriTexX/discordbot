@@ -6,6 +6,23 @@ from exceptions import FailedToLoginException
 from discord_components import Interaction
 
 
+async def auth_handler(bot, interaction):
+    await interaction.respond(type=6)
+
+    await interaction.author.send("Напишите мне в ответ свои логин и пароль от лк")
+    response = await bot.wait_for("message",
+                                  timeout=60,
+                                  check=lambda x: x.author.id == interaction.author.id
+                                  )
+    try:
+        login, password = response.content.split()
+    except ValueError:
+        await interaction.author.send("Неверный логин или пароль")
+        return
+
+    await Auth.auth(interaction.author, interaction.guild, login, password)
+
+
 class Auth(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -29,22 +46,7 @@ class Auth(commands.Cog):
 
     @commands.Cog.listener()
     async def on_button_click(self, interaction: Interaction):
-        if interaction.custom_id != "auth_button":
-            return
-        await interaction.respond(type=6)
-
-        await interaction.author.send("Напишите мне в ответ свои логин и пароль от лк")
-        response = await self.bot.wait_for("message",
-                                           timeout=60,
-                                           check=lambda x: x.author.id == interaction.author.id
-                                           )
-        try:
-            login, password = response.content.split()
-        except ValueError:
-            await interaction.author.send("Неверный логин или пароль")
-            return
-
-        await Auth.auth(interaction.author, interaction.guild, login, password)
+        await self.bot.on_button_press.handle(self.bot, interaction.custom_id, interaction)
 
 
 def setup(bot):
