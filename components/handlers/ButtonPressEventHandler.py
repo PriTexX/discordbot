@@ -6,7 +6,7 @@ class ButtonPressEventHandler:
     def __init__(self):
         self.handlers = {}
 
-    def addHandler(self, btn_id, handler: EventHandler):
+    def registerHandler(self, btn_id, handler: EventHandler):
         if self.handlers.get(btn_id, False):
             self.handlers[btn_id].append(handler)
         else:
@@ -19,6 +19,6 @@ class ButtonPressEventHandler:
                 return True
         return False
 
-    async def handle(self, bot, btn_id, interaction: Interaction):
+    async def handle(self, btn_id, interaction: Interaction):
         for handler in self.handlers[btn_id]:
-            await handler.execute(bot, interaction)
+            await handler.execute(interaction)
