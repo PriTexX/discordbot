@@ -2,9 +2,10 @@ import discord
 from discord.ext import commands
 from utils.user import UserAuth, getUser
 from guild import RoleManager, UserManager
-from exceptions import FailedToLoginException
+from exceptions import FailedToLoginException, UserAlreadyExists
 from discord_components import Interaction
 from components import EventHandler
+from utils.services import UserService
 
 
 class Auth(commands.Cog):
@@ -27,31 +28,11 @@ class Auth(commands.Cog):
             await interaction.author.send("Неверный логин или пароль")
             return
 
-        await Auth.auth(interaction.author, interaction.guild, login, password)
-
-    @staticmethod
-    async def auth(member, guild, login, password):
+        user_info = await UserAuth.auth(interaction.guild, interaction.author, login, password)
         try:
-            userToken = UserAuth.auth(login, password)
-        except FailedToLoginException:
-            await member.send(f"Неверный логин или пароль")
-            return
-
-        user = getUser(userToken)
-        role = RoleManager.getRole(guild, user.group)
-
-        if not role:
-            role = await RoleManager.createRole(guild, user.group)
-
-        await UserManager.addRoles(member, role, reason="Added by bot, adding new user role")
-        await UserManager.changeNickname(member, nick=user.name, reason="Changed by bot, authenticating new user")
-
-
-    @commands.Cog.listener()
-    async def on_button_click(self, interaction: Interaction):
-        await self.bot.on_button_press.handle(interaction.custom_id, interaction)
-        f = self.bot.cogs[0]
-        print(f)
+            await UserService.saveUser(str(interaction.author.id), user_info['oneCGuid'])
+        except UserAlreadyExists:
+            pass
 
 
 def setup(bot):
