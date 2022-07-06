@@ -1,5 +1,7 @@
+import json
+
 from constants import API_REQUEST_STRING
-from exceptions import WrongCredentials, ErrorSavingUser
+from exceptions import FailedToLoginException, ErrorSavingUser, UserAlreadyExists
 from utils.services import RequestService
 
 
@@ -13,18 +15,21 @@ class UserService:
 
         statuscode, data = await RequestService.post(UserService.login_url, data=credentials)
         if statuscode == 400:
-            raise WrongCredentials("Wrong username or password")
+            raise FailedToLoginException("Wrong username or password")
 
         if statuscode == 200:
-            return data
+            return json.loads(data)
+        raise FailedToLoginException("Some problem occurred during login")
 
     @staticmethod
-    async def saveUser(discordUserId, activeDirectoryId, oneCId):
-        discordUser = {"discorduserid": discordUserId, "activeDirectoryGuid": activeDirectoryId, "oneCGuid": oneCId}
+    async def saveUser(discordUserId, oneCId):
+        discordUser = {"discorduserid": discordUserId, "oneCGuid": oneCId}
 
-        statuscode = await RequestService.post(UserService.user_url, data=discordUser)
+        statuscode, data = await RequestService.post(UserService.user_url, data=discordUser)
         if statuscode == 500:
             raise ErrorSavingUser("Problem occurred in saving user")
+        if statuscode == 422:
+            raise UserAlreadyExists("User with same id already exists")
 
         return statuscode
 
