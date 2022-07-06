@@ -3,7 +3,7 @@ class FailedToLoginException(Exception):
         self.details = details
 
 
-class WrongCredentials(Exception):
+class UserAlreadyExists(Exception):
     def __init__(self, details: str):
         self.details = details
 
