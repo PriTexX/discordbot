@@ -1,8 +1,7 @@
 from Bot import Bot
-from config import TOKEN
+import os
 
-bot = Bot(TOKEN)
-
+bot = Bot(os.environ.get('TOKEN'))
 
 @bot.command()
 async def load(ctx, extensions):
@@ -22,4 +21,6 @@ async def reload(ctx, extensions):
     bot.load_extension(f"cogs.{extensions}")
     await ctx.author.send("Done")
 
-bot.run()
+
+if __name__ == '__main__':
+    bot.run()
