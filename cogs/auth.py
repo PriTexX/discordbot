@@ -1,9 +1,6 @@
-import discord
 from discord.ext import commands
-from utils.user import UserAuth, getUser
-from guild import RoleManager, UserManager
-from exceptions import FailedToLoginException, UserAlreadyExists
-from discord_components import Interaction
+from utils.user import UserAuth
+from exceptions import UserAlreadyExists
 from components import EventHandler
 from utils.services import UserService
 

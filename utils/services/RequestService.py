@@ -1,5 +1,6 @@
 import aiohttp
 import json
+from exceptions import ServerNotResponds
 
 
 class RequestService:
@@ -11,17 +12,28 @@ class RequestService:
 
     @staticmethod
     async def get(url):
-        conn = aiohttp.TCPConnector(verify_ssl=False)
-        async with aiohttp.request("GET", url, connector=conn, headers=RequestService.headers) as response:
-            await conn.close()
-            return response.status, await response.text()
+        try:
+            conn = aiohttp.TCPConnector(verify_ssl=False)
+            async with aiohttp.request("GET", url,
+                                       connector=conn,
+                                       headers=RequestService.headers) as response:
+                await conn.close()
+                return response.status, await response.text()
+        except aiohttp.ClientConnectorError:
+            raise ServerNotResponds("Сервер в данный момент не доступен.")
 
     @staticmethod
     async def post(url, data):
-        conn = aiohttp.TCPConnector(verify_ssl=False)
-        async with aiohttp.request("POST", url, connector=conn, data=RequestService.toJson(data), headers=RequestService.headers) as response:
-            await conn.close()
-            return response.status, await response.text()
+        try:
+            conn = aiohttp.TCPConnector(verify_ssl=False)
+            async with aiohttp.request("POST", url,
+                                       connector=conn,
+                                       data=RequestService.toJson(data),
+                                       headers=RequestService.headers) as response:
+                await conn.close()
+                return response.status, await response.text()
+        except aiohttp.ClientConnectorError:
+            raise ServerNotResponds("Сервер в данный момент не доступен.")
 
 
 
