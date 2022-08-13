@@ -1,6 +1,6 @@
 import json
 
-from constants import API_REQUEST_STRING
+from config import API_REQUEST_STRING
 from exceptions import FailedToLoginException, ErrorSavingUser, UserAlreadyExists
 from utils.services import RequestService
 

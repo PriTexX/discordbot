@@ -26,10 +26,12 @@ class Auth(commands.Cog):
             return
 
         user_info = await UserAuth.auth(interaction.guild, interaction.author, login, password)
-        try:
-            await UserService.saveUser(str(interaction.author.id), user_info['oneCGuid'])
-        except UserAlreadyExists:
-            pass
+
+        if user_info is not None:
+            try:
+                await UserService.saveUser(str(interaction.author.id), user_info['oneCGuid'])
+            except UserAlreadyExists:
+                pass
 
 
 def setup(bot):

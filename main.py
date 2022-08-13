@@ -1,7 +1,8 @@
 from Bot import Bot
 import os
+from config import TOKEN
 
-bot = Bot(os.environ.get('TOKEN'))
+bot = Bot(TOKEN)
 
 @bot.command()
 async def load(ctx, extensions):
