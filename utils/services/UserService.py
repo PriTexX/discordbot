@@ -1,7 +1,7 @@
 import json
 
 from config import API_REQUEST_STRING
-from exceptions import FailedToLoginException, ErrorSavingUser, UserAlreadyExists
+from exceptions import FailedToLoginException, ErrorSavingUser, UserAlreadyExists, ServerError
 from utils.services import RequestService
 
 
@@ -19,6 +19,10 @@ class UserService:
 
         if statuscode == 200:
             return json.loads(data)
+
+        if statuscode == 500:
+            raise ServerError("Some problem on server side occurred")
+
         raise FailedToLoginException("Some problem occurred during login")
 
     @staticmethod

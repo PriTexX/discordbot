@@ -1,4 +1,4 @@
-from exceptions import FailedToLoginException, ServerNotResponds
+from exceptions import FailedToLoginException, ServerNotResponds, ServerError
 from guild import RoleManager, UserManager
 from utils.services import UserService
 
@@ -9,10 +9,12 @@ class UserAuth:
     async def auth(guild, member, login, password):
         try:
             user_info = await UserService.login(login, password)
-        except FailedToLoginException:
+        except FailedToLoginException as exception:
+            print(exception.details)
             await member.send("Неверный логин или пароль")
             return
-        except ServerNotResponds:
+
+        except (ServerNotResponds, ServerError):
             await member.send("Авторизация в данный момент не доступна. Попробуйте позже")
             return
 
