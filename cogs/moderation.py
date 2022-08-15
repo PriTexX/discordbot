@@ -17,8 +17,23 @@ class Moderation(commands.Cog):
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def putAuthButtonHere(self, ctx):
+        file = discord.File("./assets/logo1.png", filename="polytech_logo.png")
+        embed = discord.Embed(
+            title="Авторизация на дискорд сервере",
+            url="https://e.mospolytech.ru/",
+            color=0xFFFFFF,
+            description="Следуйте инструкциям ниже, чтобы получить доступ к каналам Московского Политеха"
+        )
+
+        embed.add_field(name="1 шаг", value='Нажмите на кнопку "Авторизоваться"', inline=True)
+        embed.add_field(name="2 шаг", value="Дождитесь сообщения от бота", inline=True)
+        embed.add_field(name="\u200b", value="\u200b", inline=False)
+        embed.add_field(name="3 шаг", value="Отправьте свои логин и пароль от личного кабинета", inline=True)
+        embed.add_field(name="4 шаг", value="Если авторизация не удалась, попробуйте повторить позже", inline=True)
+
         await ctx.send(
-            embed=discord.Embed(title="Авторизация"),
+            embed=embed,
+            file=file,
             components=[
                 Button(style=ButtonStyle.green, label="Авторизоваться", custom_id="auth_button"),
             ]
