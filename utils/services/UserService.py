@@ -1,13 +1,13 @@
 import json
 
-from config import API_REQUEST_STRING
+from config import API_URL
 from exceptions import FailedToLoginException, ErrorSavingUser, UserAlreadyExists, ServerError
 from utils.services import RequestService
 
 
 class UserService:
-    login_url = API_REQUEST_STRING + 'login/'
-    user_url = API_REQUEST_STRING + 'user/'
+    login_url = API_URL + 'login/'
+    user_url = API_URL + 'user/'
 
     @staticmethod
     async def login(username, password):
