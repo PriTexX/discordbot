@@ -17,7 +17,6 @@ class Moderation(commands.Cog):
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def putAuthButtonHere(self, ctx):
-        file = discord.File("./assets/logo1.png", filename="polytech_logo.png")
         embed = discord.Embed(
             title="Авторизация на дискорд сервере",
             url="https://e.mospolytech.ru/",
@@ -33,7 +32,6 @@ class Moderation(commands.Cog):
 
         await ctx.send(
             embed=embed,
-            file=file,
             components=[
                 Button(style=ButtonStyle.green, label="Авторизоваться", custom_id="auth_button"),
             ]
