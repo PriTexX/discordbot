@@ -26,9 +26,9 @@ class Moderation(commands.Cog):
         )
 
         embed.add_field(name="1 шаг", value='Нажмите на кнопку "Авторизоваться"', inline=True)
-        embed.add_field(name="2 шаг", value="Дождитесь сообщения от бота", inline=True)
-        embed.add_field(name="\u200b", value="\u200b", inline=False)
         embed.add_field(name="3 шаг", value="Отправьте свои логин и пароль от личного кабинета", inline=True)
+        embed.add_field(name="\u200b", value="\u200b", inline=False)
+        embed.add_field(name="2 шаг", value="Дождитесь сообщения от бота", inline=True)
         embed.add_field(name="4 шаг", value="Если авторизация не удалась, попробуйте повторить позже", inline=True)
 
         await ctx.send(
