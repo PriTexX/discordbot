@@ -6,8 +6,8 @@ from utils.services import RequestService
 
 
 class UserService:
-    login_url = API_URL + 'login/'
-    user_url = API_URL + 'user/'
+    login_url = API_URL + '/login'
+    user_url = API_URL + '/user'
 
     @staticmethod
     async def login(username, password):
