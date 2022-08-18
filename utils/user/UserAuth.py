@@ -14,12 +14,8 @@ class UserAuth:
             await member.send("Неверный логин или пароль")
             return
 
-        except ServerNotResponds:
+        except (ServerNotResponds, ServerError):
             await member.send("Авторизация в данный момент не доступна. Попробуйте позже")
-            return
-
-        except ServerError:
-            await member.send("Авторизация в данный момент не доступна. Попробуйте позже. ServerError")
             return
 
         if user_info['department'] != "5dd48625-77d5-11e9-940d-000c29c02919":
