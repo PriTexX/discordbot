@@ -17,8 +17,9 @@ class RequestService:
             async with aiohttp.request("GET", url,
                                        connector=conn,
                                        headers=RequestService.headers) as response:
+                data = await response.text()
                 await conn.close()
-                return response.status, await response.text()
+                return response.status, data
         except aiohttp.ClientConnectorError:
             raise ServerNotResponds("Сервер в данный момент не доступен.")
 
@@ -30,8 +31,9 @@ class RequestService:
                                        connector=conn,
                                        data=RequestService.toJson(data),
                                        headers=RequestService.headers) as response:
+                data = await response.text()
                 await conn.close()
-                return response.status, await response.text()
+                return response.status, data
         except aiohttp.ClientConnectorError:
             raise ServerNotResponds("Сервер в данный момент не доступен.")
 
