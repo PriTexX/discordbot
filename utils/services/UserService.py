@@ -36,8 +36,3 @@ class UserService:
             raise UserAlreadyExists("User with same id already exists")
 
         return statuscode
-
-    @staticmethod
-    async def getUser(discordUserId):
-        statuscode, data = await RequestService.get(UserService.user_url + f"?discordUserId={discordUserId}")
-        print(statuscode, data)

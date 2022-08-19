@@ -9,8 +9,7 @@ class UserAuth:
     async def auth(guild, member, login, password):
         try:
             user_info = await UserService.login(login, password)
-        except FailedToLoginException as exception:
-            print(exception.details)
+        except FailedToLoginException:
             await member.send("Неверный логин или пароль")
             return
 
