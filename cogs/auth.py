@@ -15,7 +15,7 @@ class Auth(commands.Cog):
     async def auth_handler(bot, interaction):
         await interaction.respond(type=6)
 
-        await interaction.author.send("Напишите мне в ответ свои логин и пароль от лк")
+        await interaction.author.send("Напишите мне в ответ свои логин и пароль от лк в формате: логин пароль")
         try:
             response = await bot.wait_for("message",
                                           timeout=60,
@@ -28,7 +28,7 @@ class Auth(commands.Cog):
         try:
             login, password = response.content.split()
         except ValueError:
-            await interaction.author.send("Неверный логин или пароль")
+            await interaction.author.send("Неверный логин или пароль. Попробуйте пройти авторизацию еще раз ")
             return
 
         user_info = await UserAuth.auth(interaction.guild, interaction.author, login, password)

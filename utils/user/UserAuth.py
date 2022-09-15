@@ -10,7 +10,7 @@ class UserAuth:
         try:
             user_info = await UserService.login(login, password)
         except FailedToLoginException:
-            await member.send("Неверный логин или пароль")
+            await member.send("Неверный логин или пароль. Попробуйте пройти авторизацию еще раз")
             return
 
         except (ServerNotResponds, ServerError):
