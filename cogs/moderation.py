@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from discord_components import Button, ButtonStyle
+from guild import RoleManager
 
 
 class Moderation(commands.Cog):
@@ -36,6 +37,11 @@ class Moderation(commands.Cog):
                 Button(style=ButtonStyle.green, label="Авторизоваться", custom_id="auth_button"),
             ]
         )
+
+    @commands.command()
+    async def sort(self, ctx):
+        await ctx.channel.purge(limit=1)
+        await RoleManager.sortRoles(ctx.author.guild)
 
 
 def setup(bot):

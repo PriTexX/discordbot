@@ -4,6 +4,19 @@ import discord
 from math import cos, sin, e
 
 
+def sortRolesFunc(role):
+    roleName = role.name
+    idx = roleName.find('-')
+    first_part = roleName[:idx]
+    second_part = roleName[idx + 1:]
+    if len(second_part) > 3:
+        right_digits = second_part[:-1] + "." + second_part[-1] + "1"
+    else:
+        right_digits = second_part
+
+    return float(first_part + right_digits)
+
+
 def getPermissions():
     permissions = discord.Permissions(
         view_channel=True,
@@ -42,7 +55,7 @@ class RoleManager:
                                        reason="Created by bot")
         all_roles = await guild.fetch_roles()
         pos = max([rl.position for rl in all_roles if re.fullmatch("\[ПД\].*", rl.name)])
-        await role.edit(position=pos+1)
+        await role.edit(position=pos + 1)
         return role
 
     @staticmethod
@@ -78,19 +91,16 @@ class RoleManager:
         start_pos = -1
 
         all_roles = sorted(await guild.fetch_roles(), key=lambda x: x.position)
-        for i in range(len(all_roles)-1, 1, -1):
+        for i in range(len(all_roles) - 1, 1, -1):
             if all_roles[i].name == "student" or re.fullmatch("\[ПД\].*", all_roles[i].name):
                 idx_from = i + 1
                 start_pos = all_roles[i].position
                 break
 
-        for i in range(len(all_roles)-1, 1, -1):
+        for i in range(len(all_roles) - 1, 1, -1):
             if all_roles[i].name == "ОЛДЫ":
                 idx_to = i
                 break
-
-
-
 
         return all_roles[idx_from:idx_to], start_pos
 
@@ -99,13 +109,13 @@ class RoleManager:
         role_to_pos = {}
 
         master_roles = [role for role in roles if re.fullmatch("[0-9]{2}4[0-9]{0,}-[0-9]{3,}", role.name)]
-        bachelor_roles = [role for role in roles if re.fullmatch("[0-9]{2}1[0-9]{0,}-[0-9]{3,}", role.name)]
+        bachelor_roles = [role for role in roles if re.fullmatch("[0-9]{2}[123][0-9]{0,}-[0-9]{3,}", role.name)]
 
-        for role in sorted(bachelor_roles, key=lambda x: x.name, reverse=True):
+        for role in sorted(bachelor_roles, key=sortRolesFunc, reverse=True):
             stud_pos += 1
             role_to_pos[role] = stud_pos
 
-        for role in sorted(master_roles, key=lambda x: x.name, reverse=True):
+        for role in sorted(master_roles, key=sortRolesFunc, reverse=True):
             stud_pos += 1
             role_to_pos[role] = stud_pos
 
