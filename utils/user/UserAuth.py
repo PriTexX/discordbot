@@ -11,18 +11,20 @@ class UserAuth:
         try:
             user_info = await UserService.login(login, password)
         except FailedToLoginException:
-            await member.send("Неверный логин или пароль. Попробуйте пройти авторизацию еще раз")
+            await member.send(
+                f"Неверный логин или пароль. Попробуйте пройти авторизацию еще раз")
             return
 
         except (ServerNotResponds, ServerError):
-            await member.send("Авторизация в данный момент не доступна. Попробуйте позже")
+            await member.send(f"Авторизация в данный момент не доступна. Попробуйте позже")
             return
 
-        if user_info['department'] not in ["5dd48623-77d5-11e9-940d-000c29c02919", "390e68e8-77d7-11e9-940d-000c29c02919"]:
+        if user_info['department'] not in ["5dd48623-77d5-11e9-940d-000c29c02919",
+                                           "390e68e8-77d7-11e9-940d-000c29c02919"]:
             await member.send(
-                "Вы должны быть с кафедры Информационные системы и технологии, чтобы авторизоваться на этом сервере")
+                f"Вы должны быть с кафедры Информационные системы и технологии, чтобы авторизоваться "
+                f"на этом сервере")
             return
-
 
         nickname = f"{user_info['surname']} {user_info['name']}"
 

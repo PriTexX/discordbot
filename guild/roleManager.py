@@ -6,15 +6,12 @@ from math import cos, sin, e
 
 def sortRolesFunc(role):
     roleName = role.name
-    idx = roleName.find('-')
-    first_part = roleName[:idx]
-    second_part = roleName[idx + 1:]
-    if len(second_part) > 3:
-        right_digits = second_part[:-1] + "." + second_part[-1] + "1"
-    else:
-        right_digits = second_part
 
-    return float(first_part + right_digits)
+    if len(roleName) == 7:
+        return int(roleName[:3]+roleName[4:])
+
+    return int(roleName[:3]+roleName[4:-1]) + int(roleName[-1:]) + 10
+
 
 
 def getPermissions():

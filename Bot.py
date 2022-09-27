@@ -1,13 +1,14 @@
 import discord
 from discord.ext import commands
-from components.handlers import ButtonPressEventHandler
+from components.handlers import ButtonPressEventHandler, MessageEvent
 import os
 
 
 class Bot(commands.Bot):
     def __init__(self, token):
         self.token = token
-        self.on_button_press = ButtonPressEventHandler()
+        # self.on_button_press = ButtonPressEventHandler()
+        self.on_message_sent_event = MessageEvent()
 
         intents = discord.Intents.default()
         intents.emojis = False

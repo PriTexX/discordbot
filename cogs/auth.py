@@ -1,4 +1,4 @@
-from asyncio import futures
+import discord
 from discord.ext import commands
 from utils.user import UserAuth
 from exceptions import UserAlreadyExists
@@ -9,33 +9,26 @@ from utils.services import UserService
 class Auth(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.bot.on_button_press.registerHandler("auth_button", EventHandler("auth", self.auth_handler, self.bot))
+        # self.bot.on_button_press.registerHandler("auth_button", EventHandler("auth", self.auth_handler, self.bot))
+        self.bot.on_message_sent_event.registerHandler(EventHandler("auth", self.auth_handler, self.bot))
 
     @staticmethod
-    async def auth_handler(bot, interaction):
-        await interaction.respond(type=6)
-
-        await interaction.author.send("Напишите мне в ответ свои логин и пароль от лк в формате: логин пароль")
-        try:
-            response = await bot.wait_for("message",
-                                          timeout=60,
-                                          check=lambda x: x.author.id == interaction.author.id
-                                          )
-        except futures.TimeoutError:
-            await interaction.author.send("Время ожидания вышло. Повторите все шаги заново")
+    async def auth_handler(bot, message: discord.Message):
+        if message.channel.type != discord.ChannelType.private or message.author.bot:
             return
 
         try:
-            login, password = response.content.split()
+            login, password = message.content.split()
         except ValueError:
-            await interaction.author.send("Неверный логин или пароль. Попробуйте пройти авторизацию еще раз ")
+            await message.author.send("Неверный логин или пароль. Попробуйте пройти авторизацию еще раз ")
             return
 
-        user_info = await UserAuth.auth(interaction.guild, interaction.author, login, password)
+        guild = bot.get_guild(879925656396378112)
+        user_info = await UserAuth.auth(guild, await guild.fetch_member(message.author.id), login, password)
 
         if user_info is not None:
             try:
-                await UserService.saveUser(str(interaction.author.id), user_info['oneCGuid'])
+                await UserService.saveUser(str(message.author.id), user_info['oneCGuid'])
             except UserAlreadyExists:
                 pass
 
