@@ -23,8 +23,8 @@ class Auth(commands.Cog):
             await message.author.send("Неверный логин или пароль. Попробуйте пройти авторизацию еще раз ")
             return
 
-        # guild = bot.get_guild(565817860056809472)
-        guild = bot.get_guild(879925656396378112)
+        guild = bot.get_guild(565817860056809472)
+
         user_info = await UserAuth.auth(guild, await guild.fetch_member(message.author.id), login, password)
 
         if user_info is not None:

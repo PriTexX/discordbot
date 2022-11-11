@@ -15,7 +15,7 @@ class UserService:
         credentials = {"login": username, "password": password}
 
         statuscode, data = await RequestService.post(UserService.login_url, data=credentials)
-        statuscode=400
+
         if statuscode == 400:
 
             resp = requests.post("https://e.mospolytech.ru/old/lk_api.php", verify=False,
