@@ -1,4 +1,5 @@
 import json
+import requests
 
 from config import API_URL
 from exceptions import FailedToLoginException, ErrorSavingUser, UserAlreadyExists, ServerError
@@ -14,8 +15,29 @@ class UserService:
         credentials = {"login": username, "password": password}
 
         statuscode, data = await RequestService.post(UserService.login_url, data=credentials)
+        statuscode=400
         if statuscode == 400:
-            raise FailedToLoginException("Wrong username or password")
+
+            resp = requests.post("https://e.mospolytech.ru/old/lk_api.php", verify=False,
+                                                         data={"ulogin": username, "upassword": password})
+
+            if resp.status_code == 400:
+                raise FailedToLoginException("Wrong username or password")
+
+            resp = requests.get(f"https://e.mospolytech.ru/old/lk_api.php/?getUser&token={resp.json()['token']}", verify=False)
+
+            if resp.status_code != 200:
+                raise FailedToLoginException("Wrong username or password")
+
+            userInfo = resp.json()["user"]
+
+            departament = ""
+            if userInfo["specialty"] == "09.03.02 Информационные системы и технологии":
+                departament = "5dd48623-77d5-11e9-940d-000c29c02919"
+
+            return {"department": departament, "group": userInfo["group"],
+                    "surname": userInfo["surname"], "name": userInfo["name"],
+                    "oneCGuid": "Authenticated through the LK"}
 
         if statuscode == 200:
             return json.loads(data)
