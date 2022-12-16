@@ -12,40 +12,26 @@ class UserService:
 
     @staticmethod
     async def login(username, password):
-        credentials = {"login": username, "password": password}
+        credentials = {"ulogin": username, "upassword": password}
+        resp = requests.post("https://e.mospolytech.ru/old/lk_api.php", data=credentials, verify=False)
 
-        statuscode, data = await RequestService.post(UserService.login_url, data=credentials)
+        if resp.status_code != 200:
+            raise FailedToLoginException("Wrong username or password")
 
-        if statuscode == 400:
+        resp = requests.get(f"https://e.mospolytech.ru/old/lk_api.php/?getUser&token={resp.json()['token']}", verify=False)
 
-            resp = requests.post("https://e.mospolytech.ru/old/lk_api.php", verify=False,
-                                                         data={"ulogin": username, "upassword": password})
+        if resp.status_code != 200:
+            raise FailedToLoginException("Wrong username or password")
 
-            if resp.status_code == 400:
-                raise FailedToLoginException("Wrong username or password")
+        userInfo = resp.json()["user"]
 
-            resp = requests.get(f"https://e.mospolytech.ru/old/lk_api.php/?getUser&token={resp.json()['token']}", verify=False)
+        departament = ""
+        if userInfo["specialty"] == "09.03.02 Информационные системы и технологии":
+            departament = "5dd48623-77d5-11e9-940d-000c29c02919"
 
-            if resp.status_code != 200:
-                raise FailedToLoginException("Wrong username or password")
-
-            userInfo = resp.json()["user"]
-
-            departament = ""
-            if userInfo["specialty"] == "09.03.02 Информационные системы и технологии":
-                departament = "5dd48623-77d5-11e9-940d-000c29c02919"
-
-            return {"department": departament, "group": userInfo["group"],
-                    "surname": userInfo["surname"], "name": userInfo["name"],
-                    "oneCGuid": "Authenticated through the LK"}
-
-        if statuscode == 200:
-            return json.loads(data)
-
-        if statuscode == 500:
-            raise ServerError("Some problem on server side occurred")
-
-        raise FailedToLoginException("Some problem occurred during login")
+        return {"department": departament, "group": userInfo["group"],
+                "surname": userInfo["surname"], "name": userInfo["name"],
+                "oneCGuid": "Authenticated through the LK"}
 
     @staticmethod
     async def saveUser(discordUserId, oneCId):
