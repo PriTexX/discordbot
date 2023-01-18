@@ -1,4 +1,4 @@
-import json
+import re
 import requests
 
 from config import API_URL
@@ -26,7 +26,7 @@ class UserService:
         userInfo = resp.json()["user"]
 
         departament = ""
-        if userInfo["specialty"] == "09.03.02 Информационные системы и технологии":
+        if re.match(".*Информационные системы и технологии.*", userInfo["specialty"]) is not None:
             departament = "5dd48623-77d5-11e9-940d-000c29c02919"
 
         return {"department": departament, "group": userInfo["group"],
